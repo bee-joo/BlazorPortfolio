@@ -20,16 +20,10 @@ namespace BlazorPortfolio.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Block> _blocks;
 
-        private RoleManager<IdentityRole> roleManager;
-        private UserManager<ApplicationUser> userManager;
-
-        public BlocksController(ApplicationDbContext context, RoleManager<IdentityRole> roleMgr, UserManager<ApplicationUser> userManager)
+        public BlocksController(ApplicationDbContext context)
         {
             _context = context;
             _blocks = context.Blocks;
-
-            roleManager = roleMgr;
-            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -43,6 +37,18 @@ namespace BlazorPortfolio.Server.Controllers
             return await _blocks.ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Block>> GetBlockById(long id)
+        {
+            var block = await _blocks.FirstOrDefaultAsync(b => b.Id == id);
+            if (block == null)
+            {
+                return NotFound();
+            }
+            return block;
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Block>> AddBlock([FromBody] Block block)
@@ -50,6 +56,27 @@ namespace BlazorPortfolio.Server.Controllers
             var result = _blocks.Add(block);
             await _context.SaveChangesAsync();
             return result.Entity;
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<bool>> EditBlock(long id, [FromBody] Block block)
+        {
+            var data = await _blocks.FirstOrDefaultAsync(b => b.Id == id);
+            if (data != null)
+            {
+                data.Title = block.Title;
+                data.Link = block.Link;
+
+                _blocks.Update(data);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            } 
         }
 
         [HttpDelete("{id}")]
