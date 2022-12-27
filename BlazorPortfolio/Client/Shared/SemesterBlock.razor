@@ -1,0 +1,58 @@
+﻿@using BlazorPortfolio.Shared
+
+<h3>@Title</h3>
+<a href="/admin/blocks/@Semester/add">Добавить</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Заголовок
+            </th>
+            <th>
+                Ссылка
+            </th>
+            <th>
+                Семестр
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Blocks != null)
+        {
+            @foreach (var item in Blocks)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Link
+                    </td>
+                    <td>
+                        @item.Semester
+                    </td>
+                    <td>
+                        <a href="/admin/blocks/edit/@item.Id">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                        </a>
+                        <a href="/admin/blocks/delete/@item.Id">
+                            <span class="oi oi-trash" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public IEnumerable<Block> Blocks { get; set; } = default!;
+
+    [Parameter]
+    public int? Semester { get; set; }
+}

@@ -1,0 +1,57 @@
+﻿@page "/admin/blocks/{sem:int}/add"
+
+@using BlazorPortfolio.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject SemesterList Semesters
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Добавить блок для семестра @Sem</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="Title">Заголовок</label>
+            <input form="Title" class="form-control" @bind="@block.Title" />
+        </div>
+        <div class="form-group">
+            <label for="Link">Ссылка</label>
+            <input form="Link" class="form-control" @bind="@block.Link" />
+        </div>
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@Save" value="Save" />
+            <input type="button" class="btn" @onclick="@Cancel" value="Cancel" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Sem { get; set; }
+
+    Block block = new();
+
+    protected override void OnInitialized()
+    {
+    }
+    protected async Task Save()
+    {
+        block.Semester = Sem;
+        var response = await Http.PostAsJsonAsync("api/Blocks", @block);
+        Block blockResponse = await response.Content.ReadFromJsonAsync<Block>();
+        if (blockResponse?.Id > 0)
+        {
+            NavigationManager.NavigateTo($"/admin/blocks/{Sem}");
+        }
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo($"/admin/blocks/{Sem}");
+    }
+}
+}

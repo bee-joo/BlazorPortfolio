@@ -1,0 +1,45 @@
+﻿@page "/semester/{num:int}"
+@using BlazorPortfolio.Shared
+@inject IHttpClientFactory ClientFactory
+@inject SemesterList Semesters
+
+<h3>ПРОГ-@Num</h3>
+<hr />
+
+@if (!Semesters.Contains(Num))
+{
+    <a>А вы хитрец!</a>
+}
+else if (currentBlocks == null || currentBlocks.Count == 0)
+{
+    <a>Пока пусто</a>
+}
+else 
+{
+    foreach (var block in currentBlocks)
+    {
+        <Frame Title="@block.Title" Link=@($"{block.Link}")/>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Num { get; set; }
+
+    private IEnumerable<Block>? blocks;
+    private IList<Block>? currentBlocks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("public");
+        blocks = await client.GetFromJsonAsync<IEnumerable<Block>>("api/Blocks");
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (blocks != null)
+        {
+            currentBlocks = blocks.Where(b => b.Semester == Num).ToList();
+        }
+    }
+}

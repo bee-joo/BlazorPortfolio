@@ -1,0 +1,55 @@
+﻿@page "/admin/blocks/{sem:int?}"
+
+@using BlazorPortfolio.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
+@inject SemesterList Semesters
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Разделы</h3>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+        <ul class="navbar-nav flex-grow-1">
+            @foreach (var value in Semesters)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/blocks/@value">ПРОГ-@value</a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+@if (blocks != null)
+{
+    <SemesterBlock Title=@($"ПРОГ-{Sem}") Blocks="@currentBlocks" Semester="@Sem" />
+}
+
+@code {
+    private IEnumerable<Block>? blocks;
+    private IEnumerable<Block> currentBlocks = default!;
+
+    [Parameter]
+    public int? Sem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        blocks = await Http.GetFromJsonAsync<IEnumerable<Block>>("api/Blocks");
+
+        if (Sem == null)
+        {
+            Sem = Semesters.First();
+        }
+        currentBlocks = blocks!.Where(b => b.Semester == Sem).OrderBy(b => b.Title).ToList();
+
+    }
+
+    protected override void OnParametersSet()
+    {
+        currentBlocks = blocks!.Where(b => b.Semester == Sem).OrderBy(b => b.Title).ToList();
+    }
+}

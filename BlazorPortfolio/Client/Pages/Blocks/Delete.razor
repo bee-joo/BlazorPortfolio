@@ -1,0 +1,27 @@
+﻿@page "/admin/blocks/delete/{id:long}"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Delete</h3>
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.DeleteAsync("api/Blocks/" + Id);
+        bool deleteResponse = await response.Content.ReadFromJsonAsync<bool>();
+
+        if (deleteResponse)
+        {
+            NavigationManager.NavigateTo("/admin/blocks");
+        }
+    }
+}

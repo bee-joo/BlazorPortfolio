@@ -1,0 +1,11 @@
+﻿<h3>@Title</h3>
+<iframe frameborder="0" width="85%" height="500px" src="@Link"></iframe>
+<hr />
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Link { get; set; } = string.Empty;
+}
