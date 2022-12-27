@@ -1,4 +1,4 @@
-﻿@page "/admin/blocks/delete/{id:long}"
+﻿@page "/blocks/{sem:int}/delete/{id:long}"
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
@@ -14,14 +14,17 @@
     [Parameter]
     public long Id { get; set; }
 
+    [Parameter]
+    public int Sem { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.DeleteAsync("api/Blocks/" + Id);
+        var response = await Http.DeleteAsync($"api/Blocks/{Id}");
         bool deleteResponse = await response.Content.ReadFromJsonAsync<bool>();
 
         if (deleteResponse)
         {
-            NavigationManager.NavigateTo("/admin/blocks");
+            NavigationManager.NavigateTo($"/blocks/{Sem}");
         }
     }
 }

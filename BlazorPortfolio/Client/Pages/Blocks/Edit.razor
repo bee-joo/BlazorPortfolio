@@ -1,4 +1,4 @@
-﻿@page "/blocks/{sem:int}/add"
+﻿@page "/blocks/{sem:int}/edit/{id:long}"
 
 @using BlazorPortfolio.Shared
 @using Microsoft.AspNetCore.Authorization
@@ -9,7 +9,7 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
-<h3>Добавить блок для семестра @Sem</h3>
+<h3>Редактировать блок</h3>
 <hr />
 
 <div class="row">
@@ -29,21 +29,26 @@
     </div>
 </div>
 
+
 @code {
+    [Parameter]
+    public long Id { get; set; }
+
     [Parameter]
     public int Sem { get; set; }
 
     Block block = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        block = await Http.GetFromJsonAsync<Block>($"api/Blocks/{Id}");
     }
+
     protected async Task Save()
     {
-        block.Semester = Sem;
-        var response = await Http.PostAsJsonAsync("api/Blocks", @block);
-        Block blockResponse = await response.Content.ReadFromJsonAsync<Block>();
-        if (blockResponse?.Id > 0)
+        var response = await Http.PutAsJsonAsync($"api/Blocks/{Id}", @block);
+        bool personResponse = await response.Content.ReadFromJsonAsync<bool>();
+        if (personResponse)
         {
             NavigationManager.NavigateTo($"/blocks/{Sem}");
         }
@@ -52,5 +57,4 @@
     {
         NavigationManager.NavigateTo($"/blocks/{Sem}");
     }
-}
 }

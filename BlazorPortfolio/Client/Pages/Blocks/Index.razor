@@ -1,6 +1,7 @@
-﻿@page "/admin/blocks/{sem:int?}"
+﻿@page "/blocks/{sem:int?}"
 
 @using BlazorPortfolio.Shared
+@using BlazorPortfolio.Client.Common
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 
@@ -17,7 +18,7 @@
             @foreach (var value in Semesters)
             {
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/blocks/@value">ПРОГ-@value</a>
+                    <a class="nav-link" href="/blocks/@value">ПРОГ-@value</a>
                 </li>
             }
         </ul>
