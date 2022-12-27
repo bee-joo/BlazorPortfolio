@@ -1,7 +1,7 @@
 ﻿@using BlazorPortfolio.Shared
 
 <h3>@Title</h3>
-<a href="/admin/blocks/@Semester/add">Добавить</a>
+<a href="/blocks/@Semester/add">Добавить</a>
 <table class="table">
     <thead>
         <tr>
@@ -33,10 +33,10 @@
                         @item.Semester
                     </td>
                     <td>
-                        <a href="/admin/blocks/edit/@item.Id">
+                        <a href="/blocks/@Semester/edit/@item.Id">
                             <span class="oi oi-pencil" aria-hidden="true"></span>
                         </a>
-                        <a href="/admin/blocks/delete/@item.Id">
+                        <a href="/blocks/@Semester/delete/@item.Id">
                             <span class="oi oi-trash" aria-hidden="true"></span>
                         </a>
                     </td>
