@@ -16,6 +16,11 @@ a, .btn-link {
     font-size: 18px;
 }
 
+.image {
+    max-width: 80%;
+    height: auto;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
