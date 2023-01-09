@@ -1,6 +1,6 @@
 # BlazorPortfolio
 Портфолио по дисциплине "Программирование". Фронт на Blazor WebAssembly, бэк на ASP.NET Core (для изменения блоков)  
-Доступно по [ссылке](https://bee-joo.ru)
+Доступно по <a href="https://bee-joo.ru" target="_blank">ссылке</a>
 
 Стэк:
 - C#
